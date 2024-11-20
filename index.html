@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <ul id="messages"></ul>
+    <form id="form" action="">
+        <label for="input"></label>
+        <input id="input" autocapitalize="off" />
+        <button type="submit">Send</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const form = document.getElementById('form');
+        const input = document.getElementById('input');
+        const messages = document.getElementById('messages');
+
+        let socket = io();
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            if (input.value) {
+                const li = document.createElement('li');
+                li.textContent = input.value;
+                messages.appendChild(li);
+                socket.emit('message', input.value);
+                input.value = '';
+            }
+        });
+
+        socket.on('message', (message) => {
+            const li = document.createElement('li');
+            li.textContent = message;
+            messages.appendChild(li);
+        })
+    </script>
+</body>
+</html>
